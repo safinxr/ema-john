@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useProducts from '../../hooks/useProducts';
@@ -25,7 +26,6 @@ const Shop = () => {
     }, [products])
 
     const handleAddToCart = (selectedProduct) =>{
-        console.log(selectedProduct);
         let newCart = [];
         const exists = cart.find(product => product.id === selectedProduct.id);
         if(!exists){
