@@ -1,21 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Signup.css";
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init'
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate()
+  const [allError, setAllError] = useState("");
 
-  const [createUserWithEmailAndPassword, user] =useCreateUserWithEmailAndPassword(auth);
-
-    if(user){
-        navigate('/shop')
-    }
+  if (user) {
+    navigate('/login')
+  }
   const emailBlur = (event) => {
     setEmail(event.target.value);
   };
@@ -28,15 +27,15 @@ const Signup = () => {
   const createUser = (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
-      setError("your two password did not match");
+      setAllError("your two password did not match");
       return;
     }
-    if (password.length <6){
-        setError('Password mast be 6 characters longer')
-        return;
+    if (password.length < 6) {
+      setAllError('Password mast be 6 characters longer')
+      return;
     }
     createUserWithEmailAndPassword(email, password)
-    
+
   };
 
   return (
@@ -61,8 +60,9 @@ const Signup = () => {
               required
             />
           </div>
-          <p style={{ color: "red" }}>{error}</p>
-          <input className="form-submit" type="submit" value="Login" />
+          <p style={{ color: "red" }}>{allError}</p>
+          <p style={{ color: "red" }}>{error?.message}</p>
+          <input className="form-submit" type="submit" value={loading ? 'loading...' : 'Signin'} />
         </form>
         <p>
           Already have an account?{" "}
